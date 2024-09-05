@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import nltk
 import pickle
 import re
@@ -85,5 +86,17 @@ if submit_button:
 
 _,col,_=st.columns([0.4,0.1,0.4])
 with col:
-    with st.container(border=True):
-        st.write("<center>OR</center>",unsafe_allow_html=True)
+    st.subheader("OR")
+
+
+upload=st.file_uploader("Upload file (Please make sure that the column for Tweets are labelled as 'text'. )")
+if upload is not None:
+    data= pd.read_csv(upload)
+    if "text" not in data:
+        st.write("Error : Invalid Data.")
+    else:
+        text=data.text
+        prediction=predict(text)
+        data["label"]=prediction
+        st.write(data)
+        
